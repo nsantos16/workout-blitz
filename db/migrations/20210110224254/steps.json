@@ -1,0 +1,33 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "ExerciseRoutine",
+      "field": "reps",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ExerciseRoutine",
+      "field": "series",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ExerciseRoutine",
+      "field": "wight",
+      "type": "Float",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ExerciseRoutine",
+      "field": "notes",
+      "type": "String",
+      "arity": "Required"
+    }
+  ]
+}

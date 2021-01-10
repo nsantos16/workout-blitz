@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -58,10 +58,6 @@ model ExerciseRoutine {
   excerciseId       Int
   routine           Routine    @relation(fields: [routineId], references: [id])
   routineId         Int
-  reps              Int
-  series            Int
-  wight             Float
-  notes             String
   @@id([excerciseId, routineId])
 }
 

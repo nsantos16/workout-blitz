@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -20,7 +20,6 @@ model User {
   email          String    @unique
   hashedPassword String?
   role           String    @default("user")
-  age            Int
   sessions       Session[]
 }
 
@@ -37,31 +36,3 @@ model Session {
   publicData         String?
   privateData        String?
 }
-
-model Routine {
-  id                Int         @default(autoincrement()) @id
-  name              String
-  startDate         DateTime    @default(now())
-  endDate           DateTime?
-  routines          ExerciseRoutine[]
-}
-
-model Exercise {
-  id                Int         @default(autoincrement()) @id
-  name              String
-  description       String
-  routines          ExerciseRoutine[]
-}
-
-model ExerciseRoutine {
-  excercise         Exercise   @relation(fields: [excerciseId], references: [id])
-  excerciseId       Int
-  routine           Routine    @relation(fields: [routineId], references: [id])
-  routineId         Int
-  reps              Int
-  series            Int
-  wight             Float
-  notes             String
-  @@id([excerciseId, routineId])
-}
-
