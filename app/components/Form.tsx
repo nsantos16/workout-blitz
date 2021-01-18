@@ -1,5 +1,6 @@
-import React, { useState, ReactNode, PropsWithoutRef } from "react"
+import { useState, ReactNode, PropsWithoutRef } from "react"
 import { Formik, FormikProps } from "formik"
+import cn from "classnames"
 import * as z from "zod"
 
 type FormProps<S extends z.ZodType<any, any>> = {
@@ -62,7 +63,11 @@ export function Form<S extends z.ZodType<any, any>>({
             </div>
           )}
 
-          <button type="submit" disabled={isSubmitting}>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={cn("bg-gray-900", "text-white", "text-1xl", "px-5", "py-2")}
+          >
             {submitText}
           </button>
 
