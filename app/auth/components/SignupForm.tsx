@@ -1,7 +1,10 @@
 import React from "react"
 import { useMutation } from "blitz"
-import { LabeledTextField } from "app/components/LabeledTextField"
+import cn from "classnames"
+
+import { LabeledTextField } from "app/components/fields/LabeledTextField"
 import { Form, FORM_ERROR } from "app/components/Form"
+
 import signup from "app/auth/mutations/signup"
 import { SignupInput } from "app/auth/validations"
 
@@ -9,21 +12,26 @@ type SignupFormProps = {
   onSuccess?: () => void
 }
 
-export const SignupForm = (props: SignupFormProps) => {
+export const SignupForm = ({ onSuccess }: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
 
   return (
-    <div>
-      <h1>Create an Account</h1>
+    <>
+      <h1 className={cn("text-2xl", "mb-10")}>
+        Create an Account
+        <span role="img" aria-label="Thunder emoji">
+          ⚡️
+        </span>
+      </h1>
 
       <Form
         submitText="Create Account"
         schema={SignupInput}
-        initialValues={{ email: "", password: "", age: 18 }}
+        initialValues={{ email: "", password: "", name: "" }}
         onSubmit={async (values) => {
           try {
             await signupMutation(values)
-            props.onSuccess?.()
+            onSuccess?.()
           } catch (error) {
             if (error.code === "P2002" && error.meta?.target?.includes("email")) {
               // This error comes from Prisma
@@ -35,9 +43,10 @@ export const SignupForm = (props: SignupFormProps) => {
         }}
       >
         <LabeledTextField name="email" label="Email" placeholder="Email" />
+        <LabeledTextField name="name" label="Name" placeholder="Name" />
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>
-    </div>
+    </>
   )
 }
 

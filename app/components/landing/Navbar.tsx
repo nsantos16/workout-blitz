@@ -1,13 +1,64 @@
-import React from "react"
+import { Suspense } from "react"
+import { useRouter, useMutation, useSession } from "blitz"
 
 import useModal from "app/hooks/common/useModal"
+import logout from "app/auth/mutations/logout"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 import Button from "app/components/common/Button"
 import Modal from "app/components/common/Modal"
 import LoginForm from "app/auth/components/LoginForm"
+import SignupForm from "app/auth/components/SignupForm"
+
+const UserInfo = ({ onOpenLogin, onOpenSignUp }) => {
+  const currentUser = useCurrentUser()
+  const [logoutMutation] = useMutation(logout)
+  const router = useRouter()
+
+  const onLogout = async () => {
+    await logoutMutation()
+    router.push("/")
+  }
+
+  return (
+    <>
+      {!currentUser && (
+        <div className="flex space-x-8">
+          <Button
+            text="Log in"
+            backgroundColor="black"
+            textColor="white"
+            backgroundHoverColor="white"
+            onClick={onOpenLogin}
+          />
+          <Button text="Sign up" onClick={onOpenSignUp} />
+        </div>
+      )}
+      {currentUser && (
+        <div className="flex space-x-8 items-center">
+          <h1 className="text-white pl-0.5">Hi {currentUser.name}!</h1>
+          <Button text="Logout" onClick={onLogout} />
+        </div>
+      )}
+    </>
+  )
+}
 
 const Navbar = () => {
-  const { isShowing, onToggle } = useModal()
+  const { isShowing: isShowingLogin, onToggle: onOpenLogin } = useModal()
+  const { isShowing: isShowingSignUp, onToggle: onOpenSignUp } = useModal()
+
+  const router = useRouter()
+
+  const onSuccessLogin = () => {
+    router.push("/home")
+    onOpenLogin()
+  }
+
+  const onSuccessSignUp = () => {
+    router.push("/home")
+    onOpenSignUp()
+  }
 
   return (
     <>
@@ -21,20 +72,18 @@ const Navbar = () => {
           </p>
           <p className="flex sm:hidden antialiased">K.</p>
         </div>
-        <div className="flex space-x-8">
-          <Button
-            text="Log in"
-            backgroundColor="black"
-            textColor="white"
-            backgroundHoverColor="white"
-            onClick={onToggle}
-          />
-          <Button text="Sign up" />
-        </div>
+        <Suspense fallback="Loading...">
+          <UserInfo onOpenLogin={onOpenLogin} onOpenSignUp={onOpenSignUp} />
+        </Suspense>
       </div>
-      {isShowing && (
-        <Modal>
-          <LoginForm onClose={onToggle} />
+      {isShowingLogin && (
+        <Modal onClose={onOpenLogin}>
+          <LoginForm onSuccess={onSuccessLogin} />
+        </Modal>
+      )}
+      {isShowingSignUp && (
+        <Modal onClose={onOpenSignUp}>
+          <SignupForm onSuccess={onSuccessSignUp} />
         </Modal>
       )}
     </>
