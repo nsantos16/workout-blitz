@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -38,14 +38,14 @@ model Session {
 }
 
 model Routine {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  startDate DateTime   @default(now())
+  startDate DateTime  @default(now())
   endDate   DateTime?
-  routines  Exercise[]
+  routines  Workout[]
 }
 
-model Exercise {
+model Workout {
   id          Int     @id @default(autoincrement())
   name        String
   description String
