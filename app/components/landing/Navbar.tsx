@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { useRouter, useMutation, useSession } from "blitz"
+import { useRouter, useMutation } from "blitz"
 
 import useModal from "app/hooks/common/useModal"
 import logout from "app/auth/mutations/logout"
@@ -11,13 +11,17 @@ import LoginForm from "app/auth/components/LoginForm"
 import SignupForm from "app/auth/components/SignupForm"
 
 const UserInfo = ({ onOpenLogin, onOpenSignUp }) => {
-  const currentUser = useCurrentUser()
+  const { currentUser, session } = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
   const router = useRouter()
 
   const onLogout = async () => {
     await logoutMutation()
     router.push("/")
+  }
+
+  if (session.isLoading) {
+    return <></>
   }
 
   return (
@@ -51,12 +55,12 @@ const Navbar = () => {
   const router = useRouter()
 
   const onSuccessLogin = () => {
-    router.push("/home")
+    router.push("/routines")
     onOpenLogin()
   }
 
   const onSuccessSignUp = () => {
-    router.push("/home")
+    router.push("/routines")
     onOpenSignUp()
   }
 
