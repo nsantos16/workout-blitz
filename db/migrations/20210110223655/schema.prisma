@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -13,18 +13,19 @@ generator client {
 // --------------------------------------
 
 model User {
-  id             Int       @id @default(autoincrement())
+  id             Int       @default(autoincrement()) @id
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   name           String?
   email          String    @unique
   hashedPassword String?
   role           String    @default("user")
+  age            Int
   sessions       Session[]
 }
 
 model Session {
-  id                 Int       @id @default(autoincrement())
+  id                 Int       @default(autoincrement()) @id
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -38,29 +39,25 @@ model Session {
 }
 
 model Routine {
-  id        Int               @id @default(autoincrement())
-  name      String
-  startDate DateTime          @default(now())
-  endDate   DateTime?
-  routines  ExerciseRoutine[]
+  id                Int         @default(autoincrement()) @id
+  name              String
+  startDate         DateTime    @default(now())
+  endDate           DateTime?
+  routines          ExerciseRoutine[]
 }
 
 model Exercise {
-  id          Int               @id @default(autoincrement())
-  name        String
-  description String
-  routines    ExerciseRoutine[]
+  id                Int         @default(autoincrement()) @id
+  name              String
+  description       String
+  routines          ExerciseRoutine[]
 }
 
 model ExerciseRoutine {
-  excercise   Exercise @relation(fields: [excerciseId], references: [id])
-  excerciseId Int
-  routine     Routine  @relation(fields: [routineId], references: [id])
-  routineId   Int
-  reps        Int
-  series      Int
-  wight       Float
-  notes       String
-
+  excercise         Exercise   @relation(fields: [excerciseId], references: [id])
+  excerciseId       Int
+  routine           Routine    @relation(fields: [routineId], references: [id])
+  routineId         Int
   @@id([excerciseId, routineId])
 }
+

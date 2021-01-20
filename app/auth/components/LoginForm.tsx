@@ -1,7 +1,9 @@
-import React from "react"
-import { AuthenticationError, Link, useMutation } from "blitz"
-import { LabeledTextField } from "app/components/LabeledTextField"
+import { AuthenticationError, useMutation } from "blitz"
+import cn from "classnames"
+
+import { LabeledTextField } from "app/components/fields/LabeledTextField"
 import { Form, FORM_ERROR } from "app/components/Form"
+
 import login from "app/auth/mutations/login"
 import { LoginInput } from "app/auth/validations"
 
@@ -9,13 +11,17 @@ type LoginFormProps = {
   onSuccess?: () => void
 }
 
-export const LoginForm = (props: LoginFormProps) => {
+export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const [loginMutation] = useMutation(login)
 
   return (
-    <div>
-      <h1>Login</h1>
-
+    <>
+      <h1 className={cn("text-3xl", "mb-10")}>
+        Welcome back
+        <span role="img" aria-label="gym emoji">
+          🏋️‍♀️
+        </span>
+      </h1>
       <Form
         submitText="Login"
         schema={LoginInput}
@@ -23,7 +29,7 @@ export const LoginForm = (props: LoginFormProps) => {
         onSubmit={async (values) => {
           try {
             await loginMutation(values)
-            props.onSuccess?.()
+            onSuccess?.()
           } catch (error) {
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "Sorry, those credentials are invalid" }
@@ -39,11 +45,7 @@ export const LoginForm = (props: LoginFormProps) => {
         <LabeledTextField name="email" label="Email" placeholder="Email" />
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>
-
-      <div style={{ marginTop: "1rem" }}>
-        Or <Link href="/signup">Sign Up</Link>
-      </div>
-    </div>
+    </>
   )
 }
 
